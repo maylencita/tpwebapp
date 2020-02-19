@@ -21,9 +21,15 @@ const channel: Channel = {
   questions: []
 }
 
+const user: User = {
+  name: "Anonymous",
+  avatar: "?_?"
+}
+
 type AppState = {
   channel: Channel
   channels: Array<Channel>
+  user: User
 }
 
 type AppProps = {
@@ -33,7 +39,8 @@ type AppProps = {
 class App extends React.Component<AppProps, AppState> {
   state: AppState = {
     channel: channel,
-    channels: []
+    channels: [],
+    user: user 
   }
 
   render(){
@@ -61,11 +68,11 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   HomeRoute = () => {
-    return <Home onUpdateUser={(user: User) => {}} {...this.state} {...this.props} />
+    return <Home onUpdateUser={this.addUser} {...this.state} {...this.props} />
   } 
   
   LoginRoute = () => {
-    return <Home onUpdateUser={(user: User) => {}} {...this.state} {...this.props} />
+    return <Home onUpdateUser={this.addUser} {...this.state} {...this.props} />
   }
 
   addChannel = (name: string) => {
@@ -81,6 +88,19 @@ class App extends React.Component<AppProps, AppState> {
     })
   }
    
+  
+  addUser = (user: User) => {
+    const newUser = {
+      name: user.name,
+      avatar: user.avatar
+    }
+    this.setState((state, props) => {
+      return {
+        user: newUser
+      }
+    })
+  }
+
 }
 
 export default App;
