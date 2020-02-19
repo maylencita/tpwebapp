@@ -26,7 +26,7 @@ export default class ChannelSidebar extends React.Component<ChannelProps, {} > {
   renderChannelLink = (channel: Channel, index: number) => {
     return (
       <li key={index}>
-        <a href={`/messages/${channel.name}`} className="sideBar_channel sideBar_channels_link" key={index}># {channel.name}</a>
+        <Link to={`/messages/${channel.name}`} className="sideBar_channel sideBar_channels_link" key={index}># {channel.name}</Link>
       </li>
     )
   }
