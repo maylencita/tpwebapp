@@ -2,6 +2,7 @@ import React from 'react';
 import Home from './views/home'
 import Messages from './views/messages'
 import NewChannel from './views/newChannel'
+import LoginForm from './views/login'
 import { Channel, User } from './models'
 import {
   BrowserRouter as Router,
@@ -16,8 +17,16 @@ function f2(){}
 
 function f3(){}
 
+function predicate (channelId:string|undefined) {
+  return (value: Channel, index: number, obj: Channel[]) => {
+    if (value.name == channelId) {
+      return value;
+    };
+  }
+}
+
 const channel: Channel = {
-  name: "channel 1",
+  name: "this channel doesn't exist",
   questions: []
 }
 
@@ -51,7 +60,8 @@ class App extends React.Component<AppProps, AppState> {
             <Route path="/messages/:channelId" children={<this.MessagesRoute />} />              
             <Route path="/newChannel" children={this.NewChannelRoute} />
             <Route path="/addUser" children={ this.HomeRoute } />
-            <Route path="/" children={ this.LoginRoute } />          
+            <Route path="/login" children={ this.LoginRoute } />
+            <Route path="/" children={ this.HomeRoute } />
           </Switch>
         </div>
       </Router>
@@ -60,7 +70,8 @@ class App extends React.Component<AppProps, AppState> {
 
   MessagesRoute = () => {
     let { channelId } = useParams();
-    return <Messages onQuestionAsked={f1} onQuestionAnswered={f2} toggleAnswerMode={f3} {...this.state} {...this.props} />
+    const activeChannel = this.state.channels.find(predicate(channelId)) || channel ;
+    return <Messages onQuestionAsked={f1} onQuestionAnswered={f2} toggleAnswerMode={f3} {...this.state} {...this.props} activeChannel={activeChannel} />
   } 
   
   NewChannelRoute = () => {
@@ -72,7 +83,19 @@ class App extends React.Component<AppProps, AppState> {
   } 
   
   LoginRoute = () => {
-    return <Home onUpdateUser={this.addUser} {...this.state} {...this.props} />
+    return <LoginForm onLogin={this.addUserName} />
+  }
+
+  addUserName = (name: string) => {
+    const newUser = {
+      name: name,
+    }
+  
+    this.setState((state, props) => {
+      return {
+        user: newUser
+      }
+    })
   }
 
   addChannel = (name: string) => {

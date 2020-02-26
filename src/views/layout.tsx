@@ -1,5 +1,5 @@
 import * as React from 'react'
-// import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import ChannelSidebar from '../components/channelsSidebar'
 import { User, Channel } from '../models'
@@ -9,7 +9,7 @@ interface LayoutProps {
   children?: React.ReactNode
   user?: User
   channels: Array<Channel>
-  // activeChannel: Channel
+  activeChannel?: Channel
 }
 
 const layout = (props: LayoutProps) => {
@@ -24,7 +24,11 @@ const layout = (props: LayoutProps) => {
           }
         </div>
         <div className="chanel_header">
-          <h2># Channel name here </h2>
+          {
+            (props.activeChannel && <h2># <span>{props.activeChannel.name}</span></h2>) ||
+            <h2># No active channel</h2>
+          }
+          
         </div>
       </div>
       <div className="sidebar">

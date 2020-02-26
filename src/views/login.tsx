@@ -1,18 +1,18 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 
-interface ChannelFormState {
-  channelName: string
+interface LoginFormState {
+  userName: string
 }
 
-interface ChannelFormProps {
-  onNewChannel: (name: string) => void
+interface LoginFormProps {
+  onLogin: (name: string) => void
 }
 
-class NewChannelForm extends React.Component<ChannelFormProps, ChannelFormState> {
+class LoginForm extends React.Component<LoginFormProps, LoginFormState> {
 
-  state: ChannelFormState = {
-    channelName: ''
+  state: LoginFormState = {
+    userName: ''
   }
   
   render() {
@@ -20,14 +20,14 @@ class NewChannelForm extends React.Component<ChannelFormProps, ChannelFormState>
       <div className="newChannel">
         <div className="newChannel_content">
           <Link to="/" className="newChannel_close"> <span>X</span> </Link>
-          <form onSubmit={this.handleAddChannel}>
-            <h1>Create a channel</h1>
-            <label>Name</label>
+          <form onSubmit={this.handleOnSubmit}>
+            <h1>Login</h1>
+            <label>User name</label>
             <div className="inputWrapper">
               <input 
                 id="channelName" 
                 placeholder="e.g. leads" 
-                value={this.state.channelName}
+                value={this.state.userName}
                 onChange={this.handleNameChange}
               />
             </div>
@@ -43,14 +43,14 @@ class NewChannelForm extends React.Component<ChannelFormProps, ChannelFormState>
 
   handleNameChange = (event: any) => {
     this.setState({
-      channelName: event.target.value
+      userName: event.target.value
     })
   }
 
-  handleAddChannel = (event: any) => {
+  handleOnSubmit = (event: any) => {
     event.preventDefault();
-    this.props.onNewChannel(this.state.channelName)
+    this.props.onLogin(this.state.userName)
   }
 }
 
-export default NewChannelForm
+export default LoginForm

@@ -9,7 +9,7 @@ interface MessagesProps {
   appName: string,
   channel: Channel
   channels: Array<Channel>
-  // activeChannel: Channel
+  activeChannel: Channel
   // activeQuestion?: Question
   onQuestionAsked: (channelId: string, question: string) => void
   onQuestionAnswered: (channelId: string, questionId: string, content: string) => void
