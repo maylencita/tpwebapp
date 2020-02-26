@@ -41,7 +41,7 @@ class Messages extends React.Component<MessagesProps, MessagesState> {
           </div>
           <footer className="messages_footer">
             <form onSubmit={this.sendMessage}>
-              <MessageInput placeholder="Ask a question on #Channel" value={this.state.currentMessage} onChange={this.updateQuestion} />
+              <MessageInput placeholder={`Ask a question on #${this.props.activeChannelId || ''}`} value={this.state.currentMessage} onChange={this.updateQuestion} />
             </form>
             <div className="messagesContainer_notifBar" />
           </footer>
@@ -57,7 +57,7 @@ class Messages extends React.Component<MessagesProps, MessagesState> {
   sendMessage = (event: any) => {
     event.preventDefault();
 
-    //@todo
+    //@todo use callbacks so App handles this
   }
 
   renderQuestion = (question: Question, index: number) => {
