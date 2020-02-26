@@ -4,6 +4,7 @@ import { Channel } from '../models'
 
 interface ChannelProps {
   channels: Array<Channel>
+  onChannelLinkClicked: (channelId: string) => void
 }
 
 export default class ChannelSidebar extends React.Component<ChannelProps, {} > {
@@ -26,14 +27,12 @@ export default class ChannelSidebar extends React.Component<ChannelProps, {} > {
   renderChannelLink = (channel: Channel, index: number) => {
     return (
       <li key={index}>
-        <a href={`/messages/${channel.name}`} className="sideBar_channel sideBar_channels_link" key={index}># {channel.name}</a>
+        <Link to={`/messages/${channel.name}`} className="sideBar_channel sideBar_channels_link" key={index} onClick={this.updateActiveChannel(channel)}> # {channel.name} </Link>
       </li>
     )
   }
 
-  onClick() {
-    this.setState({
-      points: 1
-    })
-  } 
+  updateActiveChannel = (channel: Channel) => (event: any) => {
+    this.props.onChannelLinkClicked(channel.name)
+  }  
  }

@@ -9,11 +9,12 @@ interface MessagesProps {
   appName: string,
   channel: Channel
   channels: Array<Channel>
-  // activeChannel: Channel
-  // activeQuestion?: Question
+  activeChannelId?: string
+  // activeQuestion?: Question  
   onQuestionAsked: (channelId: string, question: string) => void
   onQuestionAnswered: (channelId: string, questionId: string, content: string) => void
   toggleAnswerMode: (q: string) => void
+  onChannelLinkClicked: (channelId: string) => void
 }
 
 interface MessagesState {

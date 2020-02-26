@@ -9,6 +9,7 @@ interface HomeProps {
   appName: string,  
   channels: Array<Channel>
   onUpdateUser: (user: User) => void
+  onChannelLinkClicked: (channelId: string) => void
   // history: any
 }
 
@@ -53,7 +54,6 @@ class home extends React.Component<HomeProps, HomeState> {
     event.preventDefault();
 
     this.props.onUpdateUser(this.state);
-    // this.props.history.push('/messages/general');
   }
 
   changeUserName = (name: string) => {
