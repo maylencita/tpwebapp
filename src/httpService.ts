@@ -38,7 +38,10 @@ export default class ChatService extends BasicHttpService {
 
   public addChannel = (channel: Channel) => this.post<Array<Channel>>(`${this.serviceUrl}/channel`, {}, channel)
 
-  public addQuestion = (question: Question, channelId: string) => this.post<Channel>(`${this.serviceUrl}/channels/${channelId}/questions`, {}, question)
+  public addQuestion = (question: Question, channelId: string) => this.post<Array<Channel>>(`${this.serviceUrl}/channels/${channelId}/questions`, {}, question)
+
+  public addAnswer = (answer: Answer, questionId: string, channelId: string) => this.post<Array<Channel>>(`${this.serviceUrl}/channels/${channelId}/questions/${questionId}`, {}, {answer})
+
 }
 
 async function fetchJson<T>(url: string, method: Method, options?: RequestOptions) {

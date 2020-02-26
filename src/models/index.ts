@@ -12,7 +12,11 @@ export type Question = {
   answers: Array<Answer>
 }
 
-export type Answer = {} //@TODO
+export type Answer = {
+  id: string
+  user: User
+  content: string
+}
  
 export const DefaultChannel: Channel = { 
   name: 'general',
@@ -38,5 +42,5 @@ function generateQuestion(index: number): Question {
 
 function generateAnswer(): Answer {
   let content = loremIpsum({count: 30, units: 'words'})
-  return { user: { name: 'Toto', avatar: '(*_*)'}, content }
+  return { id:'answer_0', user: { name: 'Toto', avatar: '(*_*)'}, content }
 }

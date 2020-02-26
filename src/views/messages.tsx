@@ -7,23 +7,23 @@ import { Channel, Question } from '../models'
 
 interface MessagesProps {
   appName: string,
-  channel: Channel
-  channels: Array<Channel>
   activeChannel: Channel
-  // activeQuestion?: Question
+  channels: Array<Channel>
+  activeQuestion?: Question
   onQuestionAsked: (channelId: string, question: string) => void
   onQuestionAnswered: (channelId: string, questionId: string, content: string) => void
-  toggleAnswerMode: (q: string) => void
 }
 
 interface MessagesState {
   currentMessage: string
+  currentAnswer: string
 }
 
 class Messages extends React.Component<MessagesProps, MessagesState> {
 
   state: MessagesState = {
-    currentMessage: ''
+    currentMessage: '',
+    currentAnswer: ''
   }
 
   render(){
@@ -33,16 +33,24 @@ class Messages extends React.Component<MessagesProps, MessagesState> {
           <div className="messages_body">
             <div className="message_list_scroll">
               {
-                this.props.channel.questions &&
-                this.props.channel.questions.map((question, index) => this.renderQuestion(question, index))
+                this.props.activeChannel.questions &&
+                this.props.activeChannel.questions.map((question, index) => this.renderQuestion(question, index))
               }                      
             </div>
           </div>
           <footer className="messages_footer">
             <form onSubmit={this.sendMessage}>
-              <MessageInput placeholder="Ask a question on #Channel" value={this.state.currentMessage} onChange={this.updateQuestion} />
+              <MessageInput placeholder="Ask a question on this channel" value={this.state.currentMessage} onChange={this.updateQuestion} />
               <button>Ask a question</button>
+
             </form>
+            {
+              this.props.activeQuestion &&
+              <form onSubmit={this.sendAnswer}>
+                <MessageInput placeholder="Answer a question on this channel" value={this.state.currentAnswer} onChange={this.updateAnswer} />
+                  <button>Answer this question</button>
+              </form>
+            }
             <div className="messagesContainer_notifBar" />
           </footer>
         </div>
@@ -51,17 +59,30 @@ class Messages extends React.Component<MessagesProps, MessagesState> {
   }
 
   updateQuestion = (currentMessage: string) => {
-    this.setState({ currentMessage });
+    this.setState( (state) => {
+      return {...state, currentMessage }
+    });
+  }
+
+  updateAnswer = (currentAnswer: string) => {
+    this.setState( (state) => {
+      return {...state, currentAnswer }
+    });
   }
 
   sendMessage = (event: any) => {
     event.preventDefault();
+    this.props.onQuestionAsked(this.props.activeChannel.name, this.state.currentMessage)
+  }
 
-    this.props.onQuestionAsked(this.props.channel.name, this.state.currentMessage)
+  sendAnswer = (event: any) => {
+    event.preventDefault();
+    if (this.props.activeQuestion?.id)
+      this.props.onQuestionAnswered(this.props.activeChannel.name, this.props.activeQuestion?.id, this.state.currentAnswer)
   }
 
   renderQuestion = (question: Question, index: number) => {
-    return <QuestionBlock question={question} key={index} toggleAnswerMode={this.props.toggleAnswerMode} />
+    return <QuestionBlock channelName={this.props.activeChannel.name} question={question} key={index} isActiveQuestion={question == this.props.activeQuestion}/>
   }
 }
 
