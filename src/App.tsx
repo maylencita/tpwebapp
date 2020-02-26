@@ -3,6 +3,8 @@ import Home from './views/home'
 import Messages from './views/messages'
 import NewChannel from './views/newChannel'
 import Login from './views/Login'
+import HttpService from './HttpService'
+import ServiceState from './HttpService'
 import { Channel, User, Question } from './models'
 import {
   BrowserRouter as Router,
@@ -16,6 +18,8 @@ import answer from './components/answer';
 function f2() { }
 
 function f3() { }
+
+const chatService = new HttpService()
 
 const channel: Channel = {
   name: "channel 1",
@@ -40,7 +44,7 @@ class App extends React.Component<AppProps, AppState> {
     channels: [],
     user: { name: "Anonymous", avatar: "?_?" },
     question: { answers: [], content: "", id: "", user: { avatar: "", name: "" } },
-    activeChannelId: ""
+    activeChannelId: "No active channel"
   }
 
   render() {
@@ -81,12 +85,14 @@ class App extends React.Component<AppProps, AppState> {
       name: name,
       questions: []
     }
+    chatService.addChannel(newChannel)
+      .then(channels => this.setState(state => { return { channels: channels } }))
 
-    this.setState((state, props) => {
-      return {
-        channels: [...state.channels, newChannel]
-      }
-    })
+    // this.setState((state, props) => {
+    //   return {
+    //     channels: [...state.channels, newChannel]
+    //   }
+    // })
   }
 
   updateUser = (user: User) => {
@@ -98,13 +104,18 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   onLogin = (name: string) => {
-    this.setState((state, props) => {
-      return {
-        user: { name: name }
-      }
-    })
+    chatService.loginUser(name)
+      .then(serviceState => this.setState(state => { return { ...state, user: serviceState.user } }))
+      .catch(error => alert(`Opps: $error`))
+
+    //this.setState((state, props) => {
+    // return {
+    //    user: { name: name , avatar : state.user.avatar }
+    //   }
+    // })
   }
   addMessage = (channelId: String, question: String) => {
+
     const newQuestion = {
       id: channelId,
       content: question,
