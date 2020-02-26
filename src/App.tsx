@@ -48,9 +48,8 @@ class App extends React.Component<AppProps, AppState> {
           <Switch>
             <Route path="/messages/:channelId" children={<this.MessagesRoute />} />              
             <Route path="/newChannel" children={this.NewChannelRoute} />
-            <Route path="/addUser" children={ this.HomeRoute } />
             <Route path="/login" children={this.LoginRoute} />
-            <Route path="/" children={ this.LoginRoute } />          
+            <Route path="/" children={ this.HomeRoute } />          
           </Switch>
         </div>
       </Router>
@@ -100,22 +99,26 @@ class App extends React.Component<AppProps, AppState> {
       questions: []
     }
   
-    this.setState((state, props) => {
-      return {
-        channels: [...state.channels, newChannel]
-      }
-    })
+    // this.setState((state, props) => {
+    //   return {
+    //     channels: [...state.channels, newChannel]
+    //   }
+    // })
+    this.chatService.addChannel(newChannel)
+    .then(channels => this.setState(state => ({...state, channels})))
+    .catch(error => error.error ? alert(`Opps: ${error.error}`) : alert(`Unexpected error: $error`) )
   }
 
+  // Default user name is "Admin"
   handleLogin = (username: string) => {
-    this.setState(state => {
-      return {...state, user: { name: username }}
-    })
-    // this.chatService.loginUser(username)
-    // .then(serviceState => this.setState(state => {
-    //   return {...state, user: serviceState.user}
-    // }))
-    // .catch(error => alert(`Opps: $error`))
+    // this.setState(state => {
+    //   return {...state, user: { name: username }}
+    // })
+    this.chatService.loginUser(username)
+    .then(serviceState => this.setState(state => {
+      return {...state, user: serviceState.user, channels: serviceState.channels}
+    }))
+    .catch(error => error.error ? alert(`Opps: ${error.error}`) : alert(`Unexpected error: $error`) )
   }
 
   updateCurrentChannel = (channelId: string) => {
