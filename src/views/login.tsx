@@ -33,7 +33,7 @@ class LoginForm extends React.Component<LoginFormProps, LoginFormState> {
             </div>
             <div className="newChannel_buttonsWrapper">
               <Link to="/"> <button className="cancel">Cancel</button> </Link>
-              <button className="create">Create channel</button>
+              <button className="create">Login</button>
             </div>
           </form>
         </div>

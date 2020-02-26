@@ -17,7 +17,7 @@ const layout = (props: LayoutProps) => {
     <div className="container">
       <div className="top_nav">
         <div className="app_title">
-        <a href="/"><h1>{props.appName}</h1> </a>
+        <Link to="/"><h1>{props.appName}</h1> </Link>
           {
             (props.user && <div> [<span>{props.user.avatar}</span>] <span>{props.user.name}</span></div>) ||
           <div>[?_?] Anonymous</div> 
@@ -39,7 +39,7 @@ const layout = (props: LayoutProps) => {
           {props.children}
         </div>
       </div>
-    </div>    
+    </div>
   )
 }
 
