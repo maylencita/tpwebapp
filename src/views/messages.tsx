@@ -57,7 +57,7 @@ class Messages extends React.Component<MessagesProps, MessagesState> {
 
   sendMessage = (event: any) => {
     event.preventDefault();
-    this.props.onQuestionAsked(this.props.activeChannelId, this.state.currentMessage)
+    this.props.onQuestionAsked(this.props.activeChannelId, this.state.currentMessage);
   }
 
   renderQuestion = (question: Question, index: number) => {

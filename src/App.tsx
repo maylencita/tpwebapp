@@ -116,26 +116,26 @@ class App extends React.Component<AppProps, AppState> {
   }
   addMessage = (channelId: string, question: string) => {
     const newQuestion = {
-      id : channelId,
-      user : this.state.user,
+      id: channelId,
+      user: this.state.user,
       content: question,
-      answers : []
+      answers: []
     }
     chatService.addQuestion(newQuestion, channelId)
-      .then(channel => this.setState(state => { return {... state, channel: channel } }))
+      .then(channel => this.setState(state => { return { ...state, channel: channel } }))
 
 
     // const newQuestion = {
     //   id: channelId,
     //   content: question,
-    //   answer: [],
+    //   answers: [],
     //   user: { name: "Anonymous", avatar: "?_?" }
     // }
-    //this.setState((state, props) => {
-    //  return {
-    //    question : newQuestion
-    //  }
-    //})
+    // this.setState((state, props) => {
+    //   return {
+    //     activeChannelId: { questions : [...state.questions, newQuestion] }
+    //   }
+    // })
   }
   updateCurrentChannel = (channelId: string) => {
     this.setState((state, props) => {
