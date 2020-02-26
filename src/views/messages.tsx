@@ -9,11 +9,12 @@ interface MessagesProps {
   appName: string,
   channel: Channel
   channels: Array<Channel>
-  // activeChannel: Channel
+  activeChannelId: string
   // activeQuestion?: Question
   onQuestionAsked: (channelId: string, question: string) => void
   onQuestionAnswered: (channelId: string, questionId: string, content: string) => void
   toggleAnswerMode: (q: string) => void
+  onChannelLinkClicked: (channelId: string) => void
 }
 
 interface MessagesState {
@@ -26,7 +27,7 @@ class Messages extends React.Component<MessagesProps, MessagesState> {
     currentMessage: ''
   }
 
-  render(){
+  render() {
     return (
       <Layout {...this.props}>
         <div className="messages_container">
@@ -35,7 +36,7 @@ class Messages extends React.Component<MessagesProps, MessagesState> {
               {
                 this.props.channel.questions &&
                 this.props.channel.questions.map((question, index) => this.renderQuestion(question, index))
-              }                      
+              }
             </div>
           </div>
           <footer className="messages_footer">
@@ -46,7 +47,7 @@ class Messages extends React.Component<MessagesProps, MessagesState> {
           </footer>
         </div>
       </Layout>
-    )   
+    )
   }
 
   updateQuestion = (currentMessage: string) => {

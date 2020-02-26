@@ -2,6 +2,7 @@ import React from 'react';
 import Home from './views/home'
 import Messages from './views/messages'
 import NewChannel from './views/newChannel'
+import Login from './views/Login'
 import { Channel, User, Question } from './models'
 import {
   BrowserRouter as Router,
@@ -11,8 +12,6 @@ import {
 } from 'react-router-dom'
 import { stat } from 'fs';
 import answer from './components/answer';
-
-function f1() { }
 
 function f2() { }
 
@@ -28,6 +27,7 @@ type AppState = {
   channels: Array<Channel>
   user: User
   question: Question
+  activeChannelId: string
 }
 
 type AppProps = {
@@ -39,7 +39,8 @@ class App extends React.Component<AppProps, AppState> {
     channel: channel,
     channels: [],
     user: { name: "Anonymous", avatar: "?_?" },
-    question: { answers: [], content: "", id: "", user: { avatar: "", name: "" } }
+    question: { answers: [], content: "", id: "", user: { avatar: "", name: "" } },
+    activeChannelId: ""
   }
 
   render() {
@@ -50,7 +51,8 @@ class App extends React.Component<AppProps, AppState> {
             <Route path="/messages/:channelId" children={<this.MessagesRoute />} />
             <Route path="/newChannel" children={this.NewChannelRoute} />
             <Route path="/addUser" children={this.HomeRoute} />
-            <Route path="/" children={this.LoginRoute} />
+            <Route path="/login" children={this.LoginRoute} />
+            <Route path="/" children={this.HomeRoute} />
           </Switch>
         </div>
       </Router>
@@ -59,19 +61,19 @@ class App extends React.Component<AppProps, AppState> {
 
   MessagesRoute = () => {
     let { channelId } = useParams();
-    return <Messages onQuestionAsked={this.addMessage} onQuestionAnswered={f2} toggleAnswerMode={f3} {...this.state} {...this.props} />
+    return <Messages onChannelLinkClicked={this.updateCurrentChannel} onQuestionAsked={this.addMessage} onQuestionAnswered={f2} toggleAnswerMode={f3} {...this.state} {...this.props} />
   }
 
   NewChannelRoute = () => {
     return <NewChannel onNewChannel={this.addChannel} {...this.state} {...this.props} />
   }
 
-  HomeRoute = () => {
-    return <Home onUpdateUser={this.updateUser} {...this.state} {...this.props} />
+  LoginRoute = () => {
+    return <Login onLogin={this.onLogin} {...this.state} {...this.props} />
   }
 
-  LoginRoute = () => {
-    return <Home onUpdateUser={this.updateUser} {...this.state} {...this.props} />
+  HomeRoute = () => {
+    return <Home onChannelLinkClicked={this.updateCurrentChannel} onUpdateUser={this.updateUser} {...this.state} {...this.props} />
   }
 
   addChannel = (name: string) => {
@@ -94,19 +96,33 @@ class App extends React.Component<AppProps, AppState> {
       }
     })
   }
+
+  onLogin = (name: string) => {
+    this.setState((state, props) => {
+      return {
+        user: { name: name }
+      }
+    })
+  }
   addMessage = (channelId: String, question: String) => {
     const newQuestion = {
       id: channelId,
       content: question,
-      answer : [],
-      user :{ name: "Anonymous", avatar: "?_?" }
+      answer: [],
+      user: { name: "Anonymous", avatar: "?_?" }
     }
-
     //this.setState((state, props) => {
     //  return {
     //    question : newQuestion
     //  }
     //})
+  }
+  updateCurrentChannel = (channelId: string) => {
+    this.setState((state, props) => {
+      return {
+        activeChannelId: channelId
+      }
+    })
   }
 }
 
