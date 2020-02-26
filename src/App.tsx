@@ -13,12 +13,6 @@ import {
 
 import ChatService from './httpService';
 
-function f1(){}
-
-function f2(){}
-
-function f3(){}
-
 const channel: Channel = {
   name: "channel 1",
   questions: []
@@ -33,12 +27,13 @@ type AppState = {
 
 type AppProps = {
   appName: string
+  initialChannels?:  Array<Channel>
 }
 
 class App extends React.Component<AppProps, AppState> {
   state: AppState = {
     channel: channel,
-    channels: []
+    channels: this.props.initialChannels ? this.props.initialChannels : []
   }
 
   render(){
@@ -57,12 +52,11 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   MessagesRoute = () => {
-    let { channelId } = useParams();
     return <Messages 
       onChannelLinkClicked={this.updateCurrentChannel} 
-      onQuestionAsked={f1} 
-      onQuestionAnswered={f2} 
-      toggleAnswerMode={f3} 
+      onQuestionAsked={this.handleQuestionAsked} 
+      onQuestionAnswered={this.handleQuestionAnswered} 
+      toggleAnswerMode={this.handleToggleAnswerMode} 
       {...this.state} 
       {...this.props} 
     />
@@ -106,7 +100,7 @@ class App extends React.Component<AppProps, AppState> {
     // })
     this.chatService.addChannel(newChannel)
     .then(channels => this.setState(state => ({...state, channels})))
-    .catch(error => error.error ? alert(`Opps: ${error.error}`) : alert(`Unexpected error: $error`) )
+    .catch(this.displayError)
   }
 
   // Default user name is "Admin"
@@ -118,7 +112,7 @@ class App extends React.Component<AppProps, AppState> {
     .then(serviceState => this.setState(state => {
       return {...state, user: serviceState.user, channels: serviceState.channels}
     }))
-    .catch(error => error.error ? alert(`Opps: ${error.error}`) : alert(`Unexpected error: $error`) )
+    .catch(this.displayError)
   }
 
   updateCurrentChannel = (channelId: string) => {
@@ -126,7 +120,23 @@ class App extends React.Component<AppProps, AppState> {
       return {...state, activeChannelId: channelId }
     })
   }
-   
+
+  handleQuestionAsked = (channelId: string, questionAsked: string) => {
+    //@todo
+  }
+
+  handleQuestionAnswered = (channelId: string, questionId: string, content: string) => {
+    //@todo
+  }
+
+  handleToggleAnswerMode = (q: string) => {
+    //@todo
+  }
+
+  //==============
+
+  displayError = (error: any) => error.error ? alert(`Opps: ${error.error}`) : alert(`Unexpected error: $error`)
+  
 }
 
 export default App;
