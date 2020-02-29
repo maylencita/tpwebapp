@@ -15,27 +15,47 @@ import {
 import { stat } from 'fs';
 import answer from './components/answer';
 
-function f2() { }
-
-function f3() { }
-
 const chatService = new HttpService()
 
 const channel: Channel = {
-  name: "channel 1",
+  name: "No active Channel",
   questions: []
 }
 
+const question: Question = {
+  answers: [],
+  content: "",
+  id: "",
+  user: { avatar: "", name: "" },
+  points: 0
+}
+
 type AppState = {
-  channel: Channel
+  channel: Channel // est le channel actif
   channels: Array<Channel>
   user: User
-  question: Question
-  activeChannelId: string
+  activeQuestion: Question // est la question actif
 }
 
 type AppProps = {
   appName: string
+}
+
+
+function predicat_find_channel(channelId: string) {
+  return (value: Channel, index: number, obj: Channel[]) => {
+    if (value.name == channelId) {
+      return value;
+    };
+  }
+}
+
+function predicat_find_question(questionId: string) {
+  return (value: Question, index: number, obj: Question[]) => {
+    if (value.id == questionId) {
+      return value;
+    };
+  }
 }
 
 class App extends React.Component<AppProps, AppState> {
@@ -43,8 +63,7 @@ class App extends React.Component<AppProps, AppState> {
     channel: channel,
     channels: [],
     user: { name: "Anonymous", avatar: "?_?" },
-    question: { answers: [], content: "", id: "", user: { avatar: "", name: "" } },
-    activeChannelId: "No active channel"
+    activeQuestion: question
   }
 
   render() {
@@ -52,6 +71,7 @@ class App extends React.Component<AppProps, AppState> {
       <Router>
         <div className="app">
           <Switch>
+            <Route path="/messages/:channelId/:questionId" children={<this.AnswerRoute />} />
             <Route path="/messages/:channelId" children={<this.MessagesRoute />} />
             <Route path="/newChannel" children={this.NewChannelRoute} />
             <Route path="/addUser" children={this.HomeRoute} />
@@ -65,7 +85,13 @@ class App extends React.Component<AppProps, AppState> {
 
   MessagesRoute = () => {
     let { channelId } = useParams();
-    return <Messages onChannelLinkClicked={this.updateCurrentChannel} onQuestionAsked={this.addMessage} onQuestionAnswered={f2} toggleAnswerMode={f3} {...this.state} {...this.props} />
+    return <Messages addPoint={this.addPointQuestion} onChannelLinkClicked={this.updateCurrentChannel} onQuestionAsked={this.addMessage} onQuestionAnswered={this.answerQuestion} toggleAnswerMode={this.toggleAnswerMode} {...this.state} {...this.props} />
+  }
+
+  //TODO
+  AnswerRoute = () => {
+    let { channelId } = useParams();
+    return <Messages addPoint={this.addPointQuestion} activeQuestion={question} onChannelLinkClicked={this.updateCurrentChannel} onQuestionAsked={this.addMessage} onQuestionAnswered={this.answerQuestion} toggleAnswerMode={this.toggleAnswerMode} {...this.state} {...this.props} />
   }
 
   NewChannelRoute = () => {
@@ -115,14 +141,16 @@ class App extends React.Component<AppProps, AppState> {
     // })
   }
   addMessage = (channelId: string, question: string) => {
+    const channelQuestion = this.state.channels.find(predicat_find_channel(channelId)) || channel
     const newQuestion = {
-      id: channelId,
+      id: channelId + "Q" + channelQuestion.questions.length,
       user: this.state.user,
       content: question,
-      answers: []
+      answers: [],
+      points: 0
     }
     chatService.addQuestion(newQuestion, channelId)
-      .then(channel => this.setState(state => { return { ...state, channel: channel } }))
+      .then(channels => this.setState(state => { return { ...state, channels: channels } }))
 
 
     // const newQuestion = {
@@ -137,10 +165,43 @@ class App extends React.Component<AppProps, AppState> {
     //   }
     // })
   }
+
+
+  answerQuestion = (channelId: string, questionId: string, content: string) => {
+    const activechannel = this.state.channels.find(predicat_find_channel(channelId)) || channel
+    const activequestion = activechannel.questions.find(predicat_find_question(questionId)) || question
+    const newAnswer = {
+      id: channelId + "Q" + activechannel.questions.length + "A" + activequestion.answers.length,
+      user: this.state.user,
+      content: content,
+      points: 0
+    }
+    chatService.addAnswer(newAnswer, questionId, channelId)
+      .then(channels => this.setState(state => { return { ...state, channels: channels } }))
+  }
+
+  toggleAnswerMode = (questionId: string) => {
+    this.setState((state, props) => {
+      return {
+        activeQuestion: this.state.channel.questions.find(predicat_find_question(questionId)) || question
+      }
+    })
+  }
+
   updateCurrentChannel = (channelId: string) => {
     this.setState((state, props) => {
       return {
-        activeChannelId: channelId
+        channel: this.state.channels.find(predicat_find_channel(channelId)) || channel,
+        activeQuestion: question // reset activeQuestion
+      }
+    })
+  }
+
+
+  addPointQuestion = (question: Question) => {
+    this.setState((state, props) => {
+      return {
+        activeQuestion: { ...state.activeQuestion, points: question.points + 1 }
       }
     })
   }

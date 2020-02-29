@@ -7,6 +7,7 @@ import { Question, Answer } from '../models';
 interface QuestionProps {
   question: Question
   toggleAnswerMode: (q: string) => void
+  addPoint: (q:Question) => void
 }
 
 interface QuestionState {
@@ -39,20 +40,20 @@ class QuestionComponent extends React.Component<QuestionProps, QuestionState> {
           </div>
         </div>    
         <div className="message_buttons">
-          <span className="message_buttons_points">0</span>
+          <span className="message_buttons_points">{this.props.question.points}</span>
           <button className="message_buttons_addPoints" onClick={this.addPoints}>+1</button>
-          <span className="question_buttons_answer" onClick={this.toggleAnswerMode}>A</span>
+          <button className="question_buttons_answer" onClick={this.toggleAnswerMode}>A</button>
         </div>
       </div>  
     )
   }  
 
   addPoints = () => {
-    //@TODO
+    this.props.addPoint(this.props.question)
   }
 
   renderAnswer = (answer: Answer, index: number) => (
-    <AnswerComponent userNickName="USER-NAME" userIcon="..." answerText="One Aswer: TODO" key={index} />
+    <AnswerComponent answer={answer} key={index} />
   )
 
   toggleAnswerMode = () => {

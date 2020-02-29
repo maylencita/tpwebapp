@@ -8,9 +8,9 @@ interface HomeProps {
   user?: User,
   appName: string,
   channels: Array<Channel>
+  channel : Channel,
   onUpdateUser: (user: User) => void
   onChannelLinkClicked: (channelId: string) => void
-  activeChannelId: string
   // history: any
 }
 
