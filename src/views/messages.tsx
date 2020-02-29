@@ -79,7 +79,7 @@ class Messages extends React.Component<MessagesProps, MessagesState> {
   sendAnswer = (event: any) => {
     event.preventDefault();
     if (this.props.activeQuestion?.id)
-      this.props.onQuestionAnswered(this.props.channel.name, this.props.activeQuestion.id, this.state.currentMessage);
+      this.props.onQuestionAnswered(this.props.channel.name, this.props.activeQuestion.id, this.state.currentAnswer);
   }
 
   renderQuestion = (question: Question, index: number) => {

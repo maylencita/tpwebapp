@@ -71,7 +71,6 @@ class App extends React.Component<AppProps, AppState> {
       <Router>
         <div className="app">
           <Switch>
-            <Route path="/messages/:channelId/:questionId" children={<this.AnswerRoute />} />
             <Route path="/messages/:channelId" children={<this.MessagesRoute />} />
             <Route path="/newChannel" children={this.NewChannelRoute} />
             <Route path="/addUser" children={this.HomeRoute} />
@@ -86,12 +85,6 @@ class App extends React.Component<AppProps, AppState> {
   MessagesRoute = () => {
     let { channelId } = useParams();
     return <Messages addPoint={this.addPointQuestion} onChannelLinkClicked={this.updateCurrentChannel} onQuestionAsked={this.addMessage} onQuestionAnswered={this.answerQuestion} toggleAnswerMode={this.toggleAnswerMode} {...this.state} {...this.props} />
-  }
-
-  //TODO
-  AnswerRoute = () => {
-    let { channelId } = useParams();
-    return <Messages addPoint={this.addPointQuestion} activeQuestion={question} onChannelLinkClicked={this.updateCurrentChannel} onQuestionAsked={this.addMessage} onQuestionAnswered={this.answerQuestion} toggleAnswerMode={this.toggleAnswerMode} {...this.state} {...this.props} />
   }
 
   NewChannelRoute = () => {
