@@ -31,12 +31,14 @@ class Messages extends React.Component<MessagesProps, MessagesState> {
   }
 
   render() {
+
     return (
       <Layout {...this.props}>
       <div className="answer"> {
-        this.props.activeQuestion &&
+        
+        this.props.activeQuestion && this.props.activeQuestion?.id!="" &&
         <form onSubmit={this.sendAnswer}>
-          <MessageInput placeholder={"Answer " + this.props.activeQuestion.content} value={this.state.currentAnswer} onChange={this.updateAnswer} />
+          <MessageInput placeholder={"Answer " + this.props.activeQuestion.content } value={this.state.currentAnswer} onChange={this.updateAnswer} />
           <button>Add Answer</button>
         </form>
       }
