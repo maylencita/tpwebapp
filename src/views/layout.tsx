@@ -1,5 +1,5 @@
 import * as React from 'react'
-// import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import ChannelSidebar from '../components/channelsSidebar'
 import { User, Channel } from '../models'
@@ -9,7 +9,8 @@ interface LayoutProps {
   children?: React.ReactNode
   user?: User
   channels: Array<Channel>
-  // activeChannel: Channel
+  channel : Channel,
+  onChannelLinkClicked: (channelId: string) => void
 }
 
 const layout = (props: LayoutProps) => {
@@ -17,14 +18,14 @@ const layout = (props: LayoutProps) => {
     <div className="container">
       <div className="top_nav">
         <div className="app_title">
-        <a href="/"><h1>{props.appName}</h1> </a>
+        <Link to="/" ><h1>{props.appName}</h1></Link>
           {
             (props.user && <div> [<span>{props.user.avatar}</span>] <span>{props.user.name}</span></div>) ||
           <div>[?_?] Anonymous</div> 
           }
         </div>
         <div className="chanel_header">
-          <h2># Channel name here </h2>
+          <h2># {props.channel.name} </h2>
         </div>
       </div>
       <div className="sidebar">

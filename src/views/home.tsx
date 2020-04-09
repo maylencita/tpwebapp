@@ -6,21 +6,23 @@ import { User, Channel } from '../models'
 
 interface HomeProps {
   user?: User,
-  appName: string,  
+  appName: string,
   channels: Array<Channel>
+  channel : Channel,
   onUpdateUser: (user: User) => void
+  onChannelLinkClicked: (channelId: string) => void
   // history: any
 }
 
 type HomeState = {
   name: string,
-  avatar?: string  
+  avatar?: string
 };
 
 const avatars = [':)', '*_*', '^_^', '^_^\'', '-_-', '--\'', '[-_-]']
 
 class home extends React.Component<HomeProps, HomeState> {
-  state: HomeState = this.props.user ? {...this.props.user} : {
+  state: HomeState = this.props.user ? { ...this.props.user } : {
     name: '',
     avatar: avatars[0]
   }
@@ -67,6 +69,8 @@ class home extends React.Component<HomeProps, HomeState> {
       avatar: event.target.value
     })
   }
+
+
 
 }
 
