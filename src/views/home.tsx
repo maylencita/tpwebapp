@@ -53,7 +53,6 @@ class home extends React.Component<HomeProps, HomeState> {
     event.preventDefault();
 
     this.props.onUpdateUser(this.state);
-    // this.props.history.push('/messages/general');
   }
 
   changeUserName = (name: string) => {

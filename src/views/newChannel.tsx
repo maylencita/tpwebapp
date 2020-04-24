@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
+import { useHistory } from "react-router-dom";
 
 interface ChannelFormState {
   channelName: string
@@ -14,6 +15,8 @@ class NewChannelForm extends React.Component<ChannelFormProps, ChannelFormState>
   state: ChannelFormState = {
     channelName: ''
   }
+
+  // history = useHistory();
   
   render() {
     return (
@@ -48,8 +51,10 @@ class NewChannelForm extends React.Component<ChannelFormProps, ChannelFormState>
   }
 
   handleAddChannel = (event: any) => {
+    
     event.preventDefault();
     this.props.onNewChannel(this.state.channelName)
+    // history.push(`/`);
   }
 }
 
